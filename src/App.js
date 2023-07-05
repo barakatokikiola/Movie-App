@@ -28,35 +28,36 @@ const App = () => {
     getMovieRequest(searchValue);
   }, [searchValue])
 
+  useEffect(() => {
+		const movieFavourites = JSON.parse(
+			localStorage.getItem('react-movie-app-favourites')
+		);
+
+		if (movieFavourites) {
+			setFavourites(movieFavourites);
+		}
+	}, []);
+
+	const saveToLocalStorage = (items) => {
+		localStorage.setItem('react-movie-app-favourites', JSON.stringify(items));
+	};
   const addFavourite =(movie)=>{
     const newFavouriteList = [...favourites, movie];
     setFavourites(newFavouriteList);
-    // saveToLocalStorage(newFavouriteList);
+    saveToLocalStorage(newFavouriteList);
   }
   const removeFavourite =(movie)=>{
     const newFavouriteList = favourites.filter(
 			(favourite) => favourite.imdbID !== movie.imdbID
 		);
 		setFavourites(newFavouriteList);
-    // saveToLocalStorage(newFavouriteList);
+    saveToLocalStorage(newFavouriteList);
   }
-  // useEffect(() => {
-	// 	const movieFavourites = JSON.parse(
-	// 		localStorage.getItem('react-movie-app-favourites')
-	// 	);
-
-	// 	setFavourites(movieFavourites);
-	// }, []);
-
-	// const saveToLocalStorage = (items) => {
-	// 	localStorage.setItem('react-movie-app-favourites', JSON.stringify(items));
-	// };
- 
  
 
 	return (
     <>
-      <Container fluid className='border-bottom border-secondary border-5'>
+      <Container className='border-bottom border-secondary border-5'>
       <Row className='d-flex align-items-center mt-4 mb-4'>
       <Header text = 'MoviePedia' />
       <SearchBox searchValue={searchValue} setSearchValue={setSearchValue} />
@@ -66,7 +67,7 @@ const App = () => {
       </Row>
       </Container>
 
-      <Container className='movie-app py-4'>
+      <Container fluid className='movie-app py-4'>
         <MovieList
         className=''
         movies={movies}
